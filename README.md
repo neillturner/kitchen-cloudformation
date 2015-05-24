@@ -1,9 +1,9 @@
-# <a name="title"></a> Kitchen::CloudFormation: A Test Kitchen Driver for Amazon CloudFormation
+# kitchen-cloudformation
 
 [![Gem Version](https://badge.fury.io/rb/kitchen-cloudformation.png)](http://badge.fury.io/rb/kitchen-cloudformation)
 [![Build Status](https://travis-ci.org/neillturner/kitchen-cloudformation.png)](https://travis-ci.org/neillturner/kitchen-cloudformation)
 
-A [Test Kitchen][kitchenci] Driver for Amazon CloudFormation.
+A Test Kitchen Driver for Amazon AWS CloudFormation.
 
 This driver uses the [aws sdk gem][aws_sdk_gem] to create and delete CloudFormation
 stacks. Use Amazon Cloud Formation to orchestrate your cloud resources for your infrastructure testing, dev or production setup!
