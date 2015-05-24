@@ -1,0 +1,13 @@
+Style/FileName:
+
+Style/Next:
+  Enabled: false
+
+Style/DoubleNegation:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Max: 30
+
+Metrics/PerceivedComplexity:
+  Max: 30
