@@ -12,8 +12,8 @@ Gem::Specification.new do |gem|
   gem.description   = "A Test Kitchen Driver for Amazon CloudFormation"
   gem.summary       = gem.description
   gem.homepage      = "https://github.com/neillturner/kitchen-cloudformation"
-
-  gem.files         = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
+  candidates = Dir.glob('{lib}/**/*') + ['README.md', 'CHANGELOG.md', 'LICENSE' , 'kitchen-cloudformation.gemspec']
+  gem.files         = candidates.sort
   gem.executables   = []
   gem.require_paths = ["lib"]
 

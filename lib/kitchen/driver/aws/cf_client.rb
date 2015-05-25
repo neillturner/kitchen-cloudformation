@@ -22,11 +22,11 @@ module Kitchen
 
   module Driver
 
-    class Cf
+    class Aws
 
       # A class for creating and managing the Cloud Formation client connection
       #
-      class Client
+      class CfClient
 
         def initialize(
           region,
@@ -38,7 +38,7 @@ module Kitchen
           creds = self.class.get_credentials(
             profile_name, access_key_id, secret_access_key, session_token
           )
-          ::AWS.config.update(
+          ::AWS.config(
             :region => region,
             :credentials => creds
           )
@@ -76,11 +76,11 @@ module Kitchen
         end
 
         def get_stack(stack_name)
-          resource.describe_stacks({:stack_name, stack_name})
+          resource.describe_stacks({:stack_name => stack_name})
         end
 
         def delete_stack(stack_name)
-          resource.delete_stack({:stack_name, stack_name})
+          resource.delete_stack({:stack_name => stack_name})
         end
 
         def client

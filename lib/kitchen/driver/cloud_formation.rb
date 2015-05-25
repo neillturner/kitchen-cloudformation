@@ -16,8 +16,9 @@ require "benchmark"
 require "json"
 require "aws"
 require "kitchen"
-require_relative "cloudformation_version"
-require_relative "cf/client"
+require_relative "cloud_formation_version"
+require_relative "aws/cf_client"
+require_relative "aws/stack_generator"
 #require "aws-sdk-core/waiters/errors"
 
 module Kitchen
@@ -26,7 +27,7 @@ module Kitchen
 
     # Amazon CloudFormation driver for Test Kitchen.
     #
-    class Cloudformation < Kitchen::Driver::Base # rubocop:disable Metrics/ClassLength
+    class CloudFormation < Kitchen::Driver::Base # rubocop:disable Metrics/ClassLength
 
       kitchen_driver_api_version 2
 
@@ -122,7 +123,7 @@ module Kitchen
        end
 
       def cf
-        @cf ||= Cf::Client.new(
+        @cf ||= Aws::CfClient.new(
           config[:region],
           config[:shared_credentials_profile],
           config[:aws_access_key_id],
@@ -132,7 +133,7 @@ module Kitchen
       end
 
       def stack_generator
-        @stack_generator ||= Cf::StackGenerator.new(config, cf)
+        @stack_generator ||= Aws::StackGenerator.new(config, cf)
       end
 
       # This copies transport config from the current config object into the

@@ -19,7 +19,7 @@ module Kitchen
 
   module Driver
 
-    class Cf
+    class Aws
 
       # A class for encapsulating the stack payload logic
       #
@@ -29,7 +29,7 @@ module Kitchen
 
         attr_reader :config, :cf
 
-        def initialize(config, ec2)
+        def initialize(config, cf)
           @config = config
           @cf = cf
         end
@@ -47,7 +47,6 @@ module Kitchen
             s[:template_body] = File.open(config[:template_file], 'rb') { |file| file.read }
           end
           s['Parameters'] = config[:parameters] if config[:parameters]
-          end
           s
         end
 
