@@ -46,129 +46,16 @@ through CI we no longer recommend storing the AWS credentials in the
 `.kitchen.yml` file.  Instead, specify them as environment variables or in the
 `~/.aws/credentials` file.
 
-## General Configuration
+## Configuration Options
 
-### availability\_zone
-
-The AWS [availability zone][region_docs] to use.  Only request
-the letter designation - will attach this to the region used.
-
-The default is `"#{region}b"`.
-
-### aws\_access\_key\_id
-
-**Deprecated** It is recommended to use the `AWS_ACCESS_KEY_ID` or the
-`~/.aws/credentials` file instead.
-
-The AWS [access key id][credentials_docs] to use.
-
-### aws\_secret\_access\_key
-
-**Deprecated** It is recommended to use the `AWS_SECRET_ACCESS_KEY` or the
-`~/.aws/credentials` file instead.
-
-The AWS [secret access key][credentials_docs] to use.
-
-### shared\_credentials\_profile
-
-The EC2 [profile name][credentials_docs] to use when reading credentials out
-of `~/.aws/credentials`.  If it is not specified AWS will read the `Default`
-profile credentials (if using this method of authentication).
-
-Can also be specified as `ENV['AWS_PROFILE']`.
-
-### aws\_ssh\_key\_id
-
-**Required** The EC2 [SSH key id][key_id_docs] to use.
-
-The default will be read from the `AWS_SSH_KEY_ID` environment variable if set,
-or `nil` otherwise.
-
-### aws\_session\_token
-
-**Deprecated** It is recommended to use the `AWS_SESSION_TOKEN` or the
-`~/.aws/credentials` file instead.
-
-The AWS [session token][credentials_docs] to use.
-
-### stack\_name
-
-**Required** The CloudFormation Stack Name to create.
-
-###  template\_file
-
-The file path and name of the cloudformation template to use.
-
-###  template\_url
-
-The url of  the cloudformation template to use.
-
-###  parameters
-
-Parameters to pass to the cloudformation create stack.
-   {
-     "ParameterKey": "ParameterValue"
-
-
-###  disable\_rollback
-
-Disable the rollback if the cloudformation create stack hits an error.
-Default is "false".
-
-###  timeout\_in\_minutes
-
-If the create stack command does not complete in the specified number of minutes timeout.
-Default is "0". i.e. it will not timeout.
-1,
-
-```ruby
-transport:
-  ssh_key: ~/.ssh/id_rsa
-```
-
-Path to the private SSH key used to connect to the instance.
-
-The default is unset, or `nil`.
-
-### ssh\_timeout
-
-**Deprecated** Instead use the `transport.connection_timeout` like
-
-```ruby
-transport:
-  connection_timeout: 60
-```
-
-The number of seconds to sleep before trying to SSH again.
-
-The default is `1`.
-
-### ssh\_retries
-
-**Deprecated** Instead use the `transport.connection_retries` like
-
-```ruby
-transport:
-  connection_retries: 10
-```
-
-The number of times to retry SSH-ing into the instance.
-
-The default is `3`.
-
-### username
-
-**Deprecated** Instead use the `transport.username` like
-
-```ruby
-transport:
-  username: ubuntu
-```
-
-The SSH username that will be used to communicate with the instance.
-
-The default will be determined by the Platform name, if a default exists.
-If a default cannot be computed, then the default is `"root"`.
+key | default value | Notes
+----|---------------|--------
+stack_name ||name of the cloud formation to create
+template_file||file containing the CloudFormation template to run
+template_url||URL of the file containing the CloudFormation template to run
+parameters|{}|Hash of parameters {key: value} to apply to the templates
+disable_rollback|false|If the template gets an error don't rollback changes
+timeout_in_minutes|0|Timeout if the stack is not created in the time
 
 ## Example
 
