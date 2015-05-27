@@ -37,16 +37,14 @@ module Kitchen
         # Transform the provided config into the hash to send to AWS.  Some fields
         # can be passed in null, others need to be ommitted if they are null
         def cf_stack_data # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-          s = {
-            :stack_name                   => config[:stack_name],
-            :disable_rollback             => config[:disable_rollback],
-            :timeout_in_minutes           => config[:timeout_in_minutes]
-          }
+          s ={:stack_name => config[:stack_name]}
           s[:template_url] = config[:template_url] if config[:template_file]
           if config[:template_file]
             s[:template_body] = File.open(config[:template_file], 'rb') { |file| file.read }
           end
-          s['Parameters'] = config[:parameters] if config[:parameters]
+          s[:timeout_in_minutes] = config[:timeout_in_minutes] if config[:timeout_in_minutes] != nil and config[:timeout_in_minutes]>0
+          s[:disable_rollback] = config[:disable_rollback] if config[:disable_rollback] != nil and config[:disable_rollback] == true or config[:disable_rollback] == false
+          s[:parameters] = config[:parameters] if config[:parameters]
           s
         end
 

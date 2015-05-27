@@ -31,6 +31,7 @@ module Kitchen
         def initialize(
           region,
           profile_name = nil,
+          ssl_cert_file = nil,
           access_key_id = nil,
           secret_access_key = nil,
           session_token = nil
@@ -38,9 +39,11 @@ module Kitchen
           creds = self.class.get_credentials(
             profile_name, access_key_id, secret_access_key, session_token
           )
+          
           ::AWS.config(
             :region => region,
-            :credentials => creds
+            :credentials => creds,
+            :ssl_ca_bundle => ssl_cert_file            
           )
         end
 
@@ -72,19 +75,20 @@ module Kitchen
         end
 
         def create_stack(options)
-          resource.create_stack(options)[0]
+          resource.create_stack(options)
         end
 
         def get_stack(stack_name)
-          resource.describe_stacks({:stack_name => stack_name})
+          resource.stack(stack_name)
         end
 
         def delete_stack(stack_name)
-          resource.delete_stack({:stack_name => stack_name})
+          s = resource.stack(stack_name)
+          s.delete
         end
 
         def client
-          @client ||= ::Aws::CloudFormation::Client.new
+          @client ||= ::Aws::CloudFormation::Client.new 
         end
 
         def resource

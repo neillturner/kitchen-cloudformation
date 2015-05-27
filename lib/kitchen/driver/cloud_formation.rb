@@ -16,7 +16,7 @@ require "benchmark"
 require "json"
 require "aws"
 require "kitchen"
-require_relative "cloud_formation_version"
+require_relative "cloudformation_version"
 require_relative "aws/cf_client"
 require_relative "aws/stack_generator"
 #require "aws-sdk-core/waiters/errors"
@@ -33,38 +33,18 @@ module Kitchen
 
       plugin_version Kitchen::Driver::CLOUDFORMATION_VERSION
 
+      default_config :region,             ENV["AWS_REGION"] || "us-east-1"
+      default_config :shared_credentials_profile, nil      
+      default_config :aws_access_key_id,  nil
+      default_config :aws_secret_access_key, nil
+      default_config :aws_session_token,  nil
+      default_config :ssl_cert_file,      ENV["SSL_CERT_FILE"]
       default_config :stack_name,         nil
       default_config :template_file,      nil
       default_config :parameters,         {}
       default_config :disable_rollback,   false
       default_config :timeout_in_minutes, 0
-      default_config :parameters,         {}
-
-      default_config :aws_access_key_id,  nil
-      default_config :aws_secret_access_key, nil
-      default_config :aws_session_token,  nil
-      default_config :aws_ssh_key_id,     ENV["AWS_SSH_KEY_ID"]
-
-       validations[:ssh_key] = lambda do |attr, val, driver|
-        unless val.nil?
-          validation_warn(driver, attr, "transport.ssh_key")
-        end
-      end
-      validations[:ssh_timeout] = lambda do |attr, val, driver|
-        unless val.nil?
-          validation_warn(driver, attr, "transport.connection_timeout")
-        end
-      end
-      validations[:ssh_retries] = lambda do |attr, val, driver|
-        unless val.nil?
-          validation_warn(driver, attr, "transport.connection_retries")
-        end
-      end
-      validations[:username] = lambda do |attr, val, driver|
-        unless val.nil?
-          validation_warn(driver, attr, "transport.username")
-        end
-      end
+      default_config :parameters,         {}      
 
       # A lifecycle method that should be invoked when the object is about
       # ready to be used. A reference to an Instance is required as
@@ -92,18 +72,17 @@ module Kitchen
           are responsible for your incurred costs.
         END
         stack = create_stack
-        puts "*** create stack returned #{stack}"
         state[:stack_name] = stack.stack_name
         info("Stack <#{state[:stack_name]}> requested.")
         #tag_stack(stack)
 
         s = cf.get_stack(state[:stack_name])
-        while s.stack_status == 'CREATING'
+        while s.stack_status == 'CREATE_IN_PROGRESS'
           info("CloudFormation waiting for stack <#{state[:stack_name]}> to be created.....")
           sleep(30)
           s = cf.get_stack(state[:stack_name])
         end
-        if s.stack_status == 'CREATECOMPLETED'
+        if s.stack_status == 'CREATE_COMPLETE'
           info("CloudFormation stack <#{state[:stack_name]}> created.")
         else
           destroy(state)
@@ -126,6 +105,7 @@ module Kitchen
         @cf ||= Aws::CfClient.new(
           config[:region],
           config[:shared_credentials_profile],
+          config[:ssl_cert_file],
           config[:aws_access_key_id],
           config[:aws_secret_access_key],
           config[:aws_session_token]
@@ -164,9 +144,8 @@ module Kitchen
 
       # Fog AWS helper for creating the stack
       def create_stack
-        debug("Creating CloudFormation stack..")
         stack_data = stack_generator.cf_stack_data
-        puts "*** stack data for create stack #{stack_data}"
+        info("Creating CloudFormation Stack #{stack_data[:stack_name]}")
         cf.create_stack(stack_data)
       end
 

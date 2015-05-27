@@ -46,12 +46,27 @@ through CI we no longer recommend storing the AWS credentials in the
 `.kitchen.yml` file.  Instead, specify them as environment variables or in the
 `~/.aws/credentials` file.
 
+## SSL Certificate File
+
+On windows you can get errors `SSLv3 read server certificate B: certificate verify failed`
+as per https://github.com/aws/aws-sdk-core-ruby/issues/93.
+To overcome this problem set the parameter `ssl_cert_file` or the environment variable `"SSL_CERT_FILE"`
+to a a SSL CA bundle. A file ca-bundle.crt is supplied inside this gem for this purpose 
+so you can set it to something like: 
+`<RubyHome>/lib/ruby/gems/2.1.0/gems/kitchen-cloudformation-0.0.1/ca-bundle.crt`
+
 ## Configuration Options
 
 key | default value | Notes
 ----|---------------|--------
-stack_name ||name of the cloud formation to create
-template_file||file containing the CloudFormation template to run
+region|ENV["AWS_REGION"] or "us-east-1"|Aws Region  
+shared_credentials_profile| nil|Specify Credentials Using a Profile Name      
+aws_access_key_id|nil|Deprecated see Authenticating with AWS
+aws_secret_access_key|nil|Deprecated see Authenticating with AWS
+aws_session_token|nil|Deprecated see Authenticating with AWS
+ssl_cert_file| ENV["SSL_CERT_FILE"]|SSL Certificate required on Windows platforms
+stack_name ||Name of the Cloud Formation Stack to create
+template_file||File containing the CloudFormation template to run
 template_url||URL of the file containing the CloudFormation template to run
 parameters|{}|Hash of parameters {key: value} to apply to the templates
 disable_rollback|false|If the template gets an error don't rollback changes
@@ -66,7 +81,6 @@ to override default configuration.
 ---
 driver:
   name: cloudformation
-  aws_ssh_key_id: id_rsa-aws
   stack_name: mystack
   template_file: /test/base.template
   parameters:
@@ -79,11 +93,14 @@ transport:
   username: ubuntu
 
 platforms:
-  - name: ubuntu-12.04
-  - name: centos-6.3
+  - name: centos-6.4
+    driver:  cloud_formation
 
+verifier:
+  ruby_bindir: '/usr/bin'
+  
 suites:
-# ...
+  - name: default
 ```
 
 ## <a name="development"></a> Development
