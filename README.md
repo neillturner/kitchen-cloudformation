@@ -5,8 +5,7 @@
 
 A Test Kitchen Driver for Amazon AWS CloudFormation.
 
-This driver uses the [aws sdk gem][aws_sdk_gem] to create and delete CloudFormation stacks.
-Use Amazon Cloud Formation to orchestrate your cloud resources for your infrastructure testing, dev or production setup.
+This driver uses the [aws sdk gem][aws_sdk_gem] to create and delete Amazon AWS CloudFormation stacks to orchestrate your cloud resources for your infrastructure testing, dev or production setup.
 
 It works best using AWS VPC where the servers have fixed IP addresses or in AWS Clasic using known Elastic IP Addresses.
 This allow the IP address of each of the servers to be specified as a hostname in the suite definition (see example below).
