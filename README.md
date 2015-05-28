@@ -11,7 +11,7 @@ It works best using AWS VPC where the servers have fixed IP addresses or in AWS 
 This allow the IP address of each of the servers to be specified as a hostname in the suite definition (see example below).
 
 So you can deploy and test say a Mongodb High Availability cluster by using cloud formation to create the servers
-and then converge each of the servers in the cluster amd run tests.
+and then converge each of the servers in the cluster and run tests.
 
 WARNING: This is a pre-release version. I'm sure the code does not handle all error conditions etc.
 
@@ -56,6 +56,18 @@ environment variable or the `shared_credentials_profile` driver config.  Read
 metadata service to discover the local instance's IAM instance profile.
 
 This precedence order is taken from http://docs.aws.amazon.com/sdkforruby/api/index.html#Configuration
+
+In summary it searches the following locations for credentials:
+
+1. ENV['AWS_ACCESS_KEY_ID'] and ENV['AWS_SECRET_ACCESS_KEY']
+1. The shared credentials ini file at ~/.aws/credentials (more information)
+1. From an instance profile when running on EC2
+
+and it searches the following locations for a region:
+
+1. ENV['AWS_REGION']
+
+
 
 The first method attempted that works will be used.  IE, if you want to auth
 using the instance profile, you must not set any of the access key configs
