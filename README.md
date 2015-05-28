@@ -83,7 +83,7 @@ through CI we no longer recommend storing the AWS credentials in the
 ## SSL Certificate File Issues
 
 On windows you can get errors `SSLv3 read server certificate B: certificate verify failed`
-as per `https://github.com/aws/aws-sdk-core-ruby/issues/93`.
+as per https://github.com/aws/aws-sdk-core-ruby/issues/93 .
 
 To overcome this problem set the parameter `ssl_cert_file` or the environment variable `SSL_CERT_FILE`
 to a a SSL CA bundle.
