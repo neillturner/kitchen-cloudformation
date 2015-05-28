@@ -57,16 +57,17 @@ metadata service to discover the local instance's IAM instance profile.
 
 This precedence order is taken from http://docs.aws.amazon.com/sdkforruby/api/index.html#Configuration
 
+```
 In summary it searches the following locations for credentials:
 
-1. ENV['AWS_ACCESS_KEY_ID'] and ENV['AWS_SECRET_ACCESS_KEY']
-1. The shared credentials ini file at ~/.aws/credentials (more information)
-1. From an instance profile when running on EC2
+   ENV['AWS_ACCESS_KEY_ID'] and ENV['AWS_SECRET_ACCESS_KEY']
+   The shared credentials ini file at ~/.aws/credentials (more information)
+   From an instance profile when running on EC2
 
 and it searches the following locations for a region:
 
-1. ENV['AWS_REGION']
-
+   ENV['AWS_REGION']
+```
 
 
 The first method attempted that works will be used.  IE, if you want to auth
