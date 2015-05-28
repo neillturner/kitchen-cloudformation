@@ -8,10 +8,10 @@ A Test Kitchen Driver for Amazon AWS CloudFormation.
 This driver uses the [aws sdk gem][aws_sdk_gem] to create and delete CloudFormation stacks.
 Use Amazon Cloud Formation to orchestrate your cloud resources for your infrastructure testing, dev or production setup.
 
-This works best using AWS VPC where the servers have fixed IP addresses or in AWS Clasic using known Elastic IP Addresses.
+It works best using AWS VPC where the servers have fixed IP addresses or in AWS Clasic using known Elastic IP Addresses.
 This allow the IP address of each of the servers to be specified as a hostname in the suite definition (see example below).
 
-This allows you to deploy and test say a Mongodb High Availability cluster by using cloud formation to create the servers
+So you can deploy and test say a Mongodb High Availability cluster by using cloud formation to create the servers
 and then converge each of the servers in the cluster amd run tests.
 
 WARNING: This is a pre-release version. I'm sure the code does not handle all error conditions etc.
