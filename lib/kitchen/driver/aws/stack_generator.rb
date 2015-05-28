@@ -44,7 +44,10 @@ module Kitchen
           end
           s[:timeout_in_minutes] = config[:timeout_in_minutes] if config[:timeout_in_minutes] != nil and config[:timeout_in_minutes]>0
           s[:disable_rollback] = config[:disable_rollback] if config[:disable_rollback] != nil and config[:disable_rollback] == true or config[:disable_rollback] == false
-          s[:parameters] = config[:parameters] if config[:parameters]
+          s[:parameters] = []
+          config[:parameters].each do |k,v|
+            s[:parameters].push({:parameter_key => k.to_s, :parameter_value => v.to_s})
+          end
           s
         end
 

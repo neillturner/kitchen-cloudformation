@@ -44,7 +44,15 @@ module Kitchen
       default_config :parameters,         {}
       default_config :disable_rollback,   false
       default_config :timeout_in_minutes, 0
-      default_config :parameters,         {}      
+      default_config :parameters,         {}
+
+      default_config :ssh_key,              nil
+      default_config :username,            'root'
+      default_config :hostname,             nil
+      #default_config :interface,           nil
+
+      required_config :ssh_key
+      required_config :stack_name
 
       # A lifecycle method that should be invoked when the object is about
       # ready to be used. A reference to an Instance is required as
@@ -61,45 +69,67 @@ module Kitchen
       end
 
       def create(state) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-       # copy_deprecated_configs(state)
+        copy_deprecated_configs(state)
         return if state[:stack_name]
 
         info(Kitchen::Util.outdent!(<<-END))
-          Creating <#{state[:stack_name]}>...
+          Creating CloudFormation Stack <#{config[:stack_name]}>...
           If you are not using an account that qualifies under the AWS
           free-tier, you may be charged to run these suites. The charge
           should be minimal, but neither Test Kitchen nor its maintainers
           are responsible for your incurred costs.
         END
-        stack = create_stack
+        begin
+          stack = create_stack
+        rescue Exception => e
+          error("CloudFormation #{e.message}.")
+          return
+        end
         state[:stack_name] = stack.stack_name
+        state[:hostname] = config[:hostname]
         info("Stack <#{state[:stack_name]}> requested.")
         #tag_stack(stack)
 
         s = cf.get_stack(state[:stack_name])
         while s.stack_status == 'CREATE_IN_PROGRESS'
+          debug_stack_events(state[:stack_name])
           info("CloudFormation waiting for stack <#{state[:stack_name]}> to be created.....")
           sleep(30)
           s = cf.get_stack(state[:stack_name])
         end
         if s.stack_status == 'CREATE_COMPLETE'
+          display_stack_events(state[:stack_name])
           info("CloudFormation stack <#{state[:stack_name]}> created.")
         else
+          display_stack_events(state[:stack_name])
+          error("CloudFormation stack <#{stack.stack_name}> failed to create....attempting to delete")
           destroy(state)
-          info("CloudFormation stack <#{stack.stack_name}> failed to create.")
         end
       end
 
       def destroy(state)
-        return if state[:stack_name].nil?
-
         stack = cf.get_stack(state[:stack_name])
-        unless stack.nil?
+        if stack.nil?
+          state.delete(:stack_name)
+        else
           cf.delete_stack(state[:stack_name])
+          begin
+            stack = cf.get_stack(state[:stack_name])
+            while stack.stack_status == 'DELETE_IN_PROGRESS'
+              debug_stack_events(state[:stack_name])
+              info("CloudFormation waiting for stack <#{state[:stack_name]}> to be deleted.....")
+              sleep(30)
+              stack = cf.get_stack(state[:stack_name])
+            end
+          rescue Exception => e
+            info("CloudFormation stack <#{state[:stack_name]}> deleted.")
+            state.delete(:stack_name)
+            return
+          end
+          display_stack_events(state[:stack_name])
+          error("CloudFormation stack <#{stack.stack_name}> failed to deleted.")
         end
-        info("CloudFormation stack <#{state[:stack_name]}> destroyed.")
-        state.delete(:stack_name)
-       end
+      end
 
       def cf
         @cf ||= Aws::CfClient.new(
@@ -147,6 +177,21 @@ module Kitchen
         stack_data = stack_generator.cf_stack_data
         info("Creating CloudFormation Stack #{stack_data[:stack_name]}")
         cf.create_stack(stack_data)
+      end
+
+      def debug_stack_events(stack_name)
+        return unless logger.debug?
+        response = cf.get_stack_events(stack_name)
+        response[:stack_events].each do |r|
+          debug("#{r[:timestamp]} #{r[:resource_type]} #{r[:logical_resource_id]} #{r[:resource_status]} #{r[:resource_status_reason]}")
+        end
+      end
+
+      def display_stack_events(stack_name)
+        response = cf.get_stack_events(stack_name)
+        response[:stack_events].each do |r|
+          info("#{r[:timestamp]} #{r[:resource_type]} #{r[:logical_resource_id]} #{r[:resource_status]} #{r[:resource_status_reason]}")
+        end
       end
 
     end

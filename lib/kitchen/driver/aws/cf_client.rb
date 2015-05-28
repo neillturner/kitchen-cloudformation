@@ -82,6 +82,10 @@ module Kitchen
           resource.stack(stack_name)
         end
 
+        def get_stack_events(stack_name)
+          client.describe_stack_events({:stack_name => stack_name})
+        end
+
         def delete_stack(stack_name)
           s = resource.stack(stack_name)
           s.delete
