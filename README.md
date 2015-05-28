@@ -7,8 +7,10 @@ A Test Kitchen Driver for Amazon AWS CloudFormation.
 
 This driver uses the [aws sdk gem][aws_sdk_gem] to create and delete CloudFormation stacks.
 Use Amazon Cloud Formation to orchestrate your cloud resources for your infrastructure testing, dev or production setup.
+
 This works best using AWS VPC where the servers have fixed IP addresses or in AWS Clasic using known Elastic IP Addresses.
 This allow the IP address of each of the servers to be specified as a hostname in the suite definition (see example below).
+
 This allows you to deploy and test say a Mongodb High Availability cluster by using cloud formation to create the servers
 and then converge each of the servers in the cluster amd run tests.
 
@@ -70,9 +72,11 @@ through CI we no longer recommend storing the AWS credentials in the
 
 On windows you can get errors `SSLv3 read server certificate B: certificate verify failed`
 as per `https://github.com/aws/aws-sdk-core-ruby/issues/93`.
+
 To overcome this problem set the parameter `ssl_cert_file` or the environment variable `SSL_CERT_FILE`
-to a a SSL CA bundle. A file ca-bundle.crt is supplied inside this gem for this purpose 
-so you can set it to something like: 
+to a a SSL CA bundle.
+
+A file ca-bundle.crt is supplied inside this gem for this purpose so you can set it to something like: 
 `<RubyHome>/lib/ruby/gems/2.1.0/gems/kitchen-cloudformation-0.0.1/ca-bundle.crt`
 
 
@@ -125,5 +129,6 @@ Apache 2.0 (see [LICENSE][license])
 ## TO DO
 
 -More testing and error handling.
+
 -implement all the options of cloud formation.
 
