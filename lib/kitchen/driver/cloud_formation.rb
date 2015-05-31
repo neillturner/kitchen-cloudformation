@@ -22,9 +22,8 @@ require_relative 'aws/stack_generator'
 #require 'aws-sdk-core/waiters/errors'
 
 module Kitchen
-
   module Driver
-
+    #
     # Amazon CloudFormation driver for Test Kitchen.
     #
     class CloudFormation < Kitchen::Driver::Base # rubocop:disable Metrics/ClassLength
@@ -49,7 +48,7 @@ module Kitchen
       default_config :ssh_key,              nil
       default_config :username,            'root'
       default_config :hostname,             nil
-      #default_config :interface,           nil
+      # default_config :interface,           nil
 
       required_config :ssh_key
       required_config :stack_name
@@ -74,7 +73,7 @@ module Kitchen
         state[:stack_name] = stack.stack_name
         state[:hostname] = config[:hostname]
         info("Stack <#{state[:stack_name]}> requested.")
-        #tag_stack(stack)
+        # tag_stack(stack)
 
         s = cf.get_stack(state[:stack_name])
         while s.stack_status == 'CREATE_IN_PROGRESS'
@@ -138,23 +137,16 @@ module Kitchen
       # can get rid of this when we get rid of these deprecated configs!
       # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       def copy_deprecated_configs(state)
-        if config[:ssh_timeout]
-          state[:connection_timeout] = config[:ssh_timeout]
-        end
-        if config[:ssh_retries]
-          state[:connection_retries] = config[:ssh_retries]
-        end
-        if config[:username]
-          state[:username] = config[:username]
-        #elsif instance.transport[:username] == instance.transport.class.defaults[:username]
-        #  # If the transport has the default username, copy it from amis.json
-        #  # This duplicated old behavior but I hate amis.json
-        #  ami_username = amis["usernames"][instance.platform.name]
-        #  state[:username] = ami_username if ami_username
-        end
-        if config[:ssh_key]
-          state[:ssh_key] = config[:ssh_key]
-        end
+        state[:connection_timeout] = config[:ssh_timeout] if config[:ssh_timeout]
+        state[:connection_retries] = config[:ssh_retries] if config[:ssh_retries]
+        state[:username] = config[:username] if config[:username]
+        # elsif instance.transport[:username] == instance.transport.class.defaults[:username]
+        # If the transport has the default username, copy it from amis.json
+        # This duplicated old behavior but I hate amis.json
+        # ami_username = amis["usernames"][instance.platform.name]
+        # state[:username] = ami_username if ami_username
+        # end
+        state[:ssh_key] = config[:ssh_key] if config[:ssh_key]
       end
       # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
