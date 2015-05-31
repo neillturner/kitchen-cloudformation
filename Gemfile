@@ -1,6 +1,5 @@
-source "https://rubygems.org"
+# encoding: UTF-8
+source 'https://rubygems.org'
 
-# Specify your gem's dependencies in kitchen-cloudformation.gemspec
-gemspec
-
-
+gem 'rubocop', '>=0.26.1'
+gem 'rake', '>=10.2.0'

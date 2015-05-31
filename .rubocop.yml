@@ -1,13 +1,24 @@
-Style/FileName:
+AllCops:
+  Exclude:
+    - vendor/**
 
-Style/Next:
+Documentation:
   Enabled: false
-
-Style/DoubleNegation:
+AlignParameters:
+  Enabled: true
+Encoding:
+  Enabled: true
+HashSyntax:
+  Enabled: true
+LineLength:
   Enabled: false
-
-Metrics/CyclomaticComplexity:
-  Max: 30
-
-Metrics/PerceivedComplexity:
-  Max: 30
+MethodLength:
+  Enabled: false
+ClassLength:
+  Enabled: false
+NumericLiterals:
+  MinDigits: 10
+AbcSize:
+  Enabled: false
+MultilineOperationIndentation:
+  Enabled: false
