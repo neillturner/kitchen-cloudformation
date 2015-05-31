@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require "benchmark"
-require "json"
-require "aws"
-require "kitchen"
-require_relative "cloudformation_version"
-require_relative "aws/cf_client"
-require_relative "aws/stack_generator"
-#require "aws-sdk-core/waiters/errors"
+require 'benchmark'
+require 'json'
+require 'aws'
+require 'kitchen'
+require_relative 'cloudformation_version'
+require_relative 'aws/cf_client'
+require_relative 'aws/stack_generator'
+#require 'aws-sdk-core/waiters/errors'
 
 module Kitchen
 
@@ -33,12 +33,12 @@ module Kitchen
 
       plugin_version Kitchen::Driver::CLOUDFORMATION_VERSION
 
-      default_config :region,             ENV["AWS_REGION"] || "us-east-1"
-      default_config :shared_credentials_profile, nil      
+      default_config :region,             ENV['AWS_REGION'] || 'us-east-1'
+      default_config :shared_credentials_profile, nil
       default_config :aws_access_key_id,  nil
       default_config :aws_secret_access_key, nil
       default_config :aws_session_token,  nil
-      default_config :ssl_cert_file,      ENV["SSL_CERT_FILE"]
+      default_config :ssl_cert_file,      ENV['SSL_CERT_FILE']
       default_config :stack_name,         nil
       default_config :template_file,      nil
       default_config :parameters,         {}
