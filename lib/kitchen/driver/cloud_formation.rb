@@ -66,7 +66,7 @@ module Kitchen
         begin
           stack = create_stack
         rescue # Exception => e
-          error("CloudFormation #{$!}.") # e.message
+          error("CloudFormation #{$ERROR_INFO}.") # e.message
           return
         end
         state[:stack_name] = stack.stack_name
