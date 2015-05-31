@@ -19,14 +19,14 @@ require 'kitchen'
 require_relative 'cloudformation_version'
 require_relative 'aws/cf_client'
 require_relative 'aws/stack_generator'
-#require 'aws-sdk-core/waiters/errors'
+# require 'aws-sdk-core/waiters/errors'
 
 module Kitchen
   module Driver
     #
     # Amazon CloudFormation driver for Test Kitchen.
     #
-    class CloudFormation < Kitchen::Driver::Base # rubocop:disable Metrics/ClassLength
+    class CloudFormation < Kitchen::Driver::Base
 
       kitchen_driver_api_version 2
 
@@ -148,9 +148,7 @@ module Kitchen
         # end
         state[:ssh_key] = config[:ssh_key] if config[:ssh_key]
       end
-      # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
-      # Fog AWS helper for creating the stack
       def create_stack
         stack_data = stack_generator.cf_stack_data
         info("Creating CloudFormation Stack #{stack_data[:stack_name]}")
