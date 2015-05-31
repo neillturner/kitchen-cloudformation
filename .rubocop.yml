@@ -9,7 +9,10 @@ Style/DoubleNegation:
   Enabled: false
 
 Metrics/CyclomaticComplexity:
-  Max: 30
+  Max: 60
 
 Metrics/PerceivedComplexity:
-  Max: 30
+  Max: 60
+
+Metrics/LineLength:
+  Max: 99

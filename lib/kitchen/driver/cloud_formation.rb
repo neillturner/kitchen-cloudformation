@@ -171,7 +171,6 @@ module Kitchen
           info("#{r[:timestamp]} #{r[:resource_type]} #{r[:logical_resource_id]} #{r[:resource_status]} #{r[:resource_status_reason]}")
         end
       end
-
     end
   end
 end
