@@ -65,8 +65,8 @@ module Kitchen
         END
         begin
           stack = create_stack
-        rescue Exception => e
-          error("CloudFormation #{e.message}.")
+        rescue # Exception => e
+          error("CloudFormation #{$!}.") # e.message
           return
         end
         state[:stack_name] = stack.stack_name
@@ -105,7 +105,7 @@ module Kitchen
               sleep(30)
               stack = cf.get_stack(state[:stack_name])
             end
-          rescue Exception => e
+          rescue # Exception => e
             info("CloudFormation stack <#{state[:stack_name]}> deleted.")
             state.delete(:stack_name)
             return
