@@ -38,9 +38,9 @@ module Kitchen
           )
 
           ::AWS.config(
-            :region => region,
-            :credentials => creds,
-            :ssl_ca_bundle => ssl_cert_file
+            region: region,
+            credentials: creds,
+            ssl_ca_bundle: ssl_cert_file
           )
         end
 
@@ -66,7 +66,7 @@ module Kitchen
           elsif shared_creds.loadable?
             shared_creds
           else
-            ::Aws::InstanceProfileCredentials.new(:retries => 1)
+            ::Aws::InstanceProfileCredentials.new(retries: 1)
           end
         end
 
