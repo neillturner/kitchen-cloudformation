@@ -27,7 +27,6 @@ module Kitchen
     # Amazon CloudFormation driver for Test Kitchen.
     #
     class CloudFormation < Kitchen::Driver::Base
-
       kitchen_driver_api_version 2
 
       plugin_version Kitchen::Driver::CLOUDFORMATION_VERSION

@@ -16,15 +16,12 @@
 require 'kitchen/logging'
 
 module Kitchen
-
   module Driver
-
     class Aws
 
       # A class for encapsulating the stack payload logic
       #
       class StackGenerator
-
         include Logging
 
         attr_reader :config, :cf
@@ -37,13 +34,13 @@ module Kitchen
         # Transform the provided config into the hash to send to AWS.  Some fields
         # can be passed in null, others need to be ommitted if they are null
         def cf_stack_data
-          s ={:stack_name => config[:stack_name]}
+          s = {stack_name: config[:stack_name]}
           s[:template_url] = config[:template_url] if config[:template_file]
           if config[:template_file]
             s[:template_body] = File.open(config[:template_file], 'rb') { |file| file.read }
           end
-          s[:timeout_in_minutes] = config[:timeout_in_minutes] if config[:timeout_in_minutes] != nil and config[:timeout_in_minutes]>0
-          s[:disable_rollback] = config[:disable_rollback] if config[:disable_rollback] != nil and config[:disable_rollback] == true or config[:disable_rollback] == false
+          s[:timeout_in_minutes] = config[:timeout_in_minutes] if !config[:timeout_in_minutes].nil? and config[:timeout_in_minutes]>0
+          s[:disable_rollback] = config[:disable_rollback]     if !config[:disable_rollback].nil? and config[:disable_rollback] == true || config[:disable_rollback] == false
           s[:parameters] = []
           config[:parameters].each do |k, v|
             s[:parameters].push({ parameter_key: k.to_s, parameter_value: v.to_s })
