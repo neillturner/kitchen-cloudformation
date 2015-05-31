@@ -12,7 +12,7 @@ Gem::Specification.new do |gem|
   gem.description   = 'A Test Kitchen Driver for Amazon AWS CloudFormation'
   gem.summary       = gem.description
   gem.homepage      = 'https://github.com/neillturner/kitchen-cloudformation'
-  candidates = Dir.glob('{lib}/**/*') + ['README.md', 'CHANGELOG.md', 'LICENSE' , 'ca-bundle.crt', 'kitchen-cloudformation.gemspec']
+  candidates = Dir.glob('{lib}/**/*') + ['README.md', 'CHANGELOG.md', 'LICENSE', 'ca-bundle.crt', 'kitchen-cloudformation.gemspec']
   gem.files         = candidates.sort
   gem.executables   = []
   gem.require_paths = ['lib']

@@ -19,11 +19,9 @@ require 'aws-sdk-core/shared_credentials'
 require 'aws-sdk-core/instance_profile_credentials'
 
 module Kitchen
-
   module Driver
-
     class Aws
-
+      #
       # A class for creating and managing the Cloud Formation client connection
       #
       class CfClient
@@ -100,9 +98,6 @@ module Kitchen
         end
 
       end
-
     end
-
   end
-
 end
