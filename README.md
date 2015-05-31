@@ -143,3 +143,8 @@ Apache 2.0 (see [LICENSE][license])
 
 -implement all the options of cloud formation.
 
+-We also need plugins for: 
+ OpenStack Heat
+ Azure Resource Manager
+ Google Cloud Deployment Manager
+but i'm not aware of any ruby sdks for these yet.
