@@ -18,7 +18,7 @@ require 'kitchen/logging'
 module Kitchen
   module Driver
     class Aws
-
+      #
       # A class for encapsulating the stack payload logic
       #
       class StackGenerator
@@ -43,7 +43,7 @@ module Kitchen
           s[:disable_rollback] = config[:disable_rollback]     if !config[:disable_rollback].nil? && config[:disable_rollback] == true || config[:disable_rollback] == false
           s[:parameters] = []
           config[:parameters].each do |k, v|
-            s[:parameters].push({ parameter_key: k.to_s, parameter_value: v.to_s })
+            s[:parameters].push(parameter_key: k.to_s, parameter_value: v.to_s)
           end
           s
         end

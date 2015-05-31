@@ -25,7 +25,6 @@ module Kitchen
       # A class for creating and managing the Cloud Formation client connection
       #
       class CfClient
-
         def initialize(
           region,
           profile_name = nil,
@@ -47,7 +46,6 @@ module Kitchen
 
         # Try and get the credentials from an ordered list of locations
         # http://docs.aws.amazon.com/sdkforruby/api/index.html#Configuration
-        # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
         def self.get_credentials(profile_name, access_key_id, secret_access_key, session_token)
           shared_creds = ::Aws::SharedCredentials.new(:profile_name => profile_name)
           if access_key_id && secret_access_key
@@ -81,7 +79,7 @@ module Kitchen
         end
 
         def get_stack_events(stack_name)
-          client.describe_stack_events(:stack_name => stack_name)
+          client.describe_stack_events(stack_name: stack_name)
         end
 
         def delete_stack(stack_name)
@@ -96,7 +94,6 @@ module Kitchen
         def resource
           @resource ||= ::Aws::CloudFormation::Resource.new
         end
-
       end
     end
   end
