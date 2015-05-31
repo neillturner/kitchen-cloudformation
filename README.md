@@ -69,7 +69,6 @@ and it searches the following locations for a region:
    ENV['AWS_REGION']
 ```
 
-
 The first method attempted that works will be used.  IE, if you want to auth
 using the instance profile, you must not set any of the access key configs
 or environment variables, and you must not specify a `~/.aws/credentials`
@@ -88,7 +87,7 @@ as per https://github.com/aws/aws-sdk-core-ruby/issues/93 .
 To overcome this problem set the parameter `ssl_cert_file` or the environment variable `SSL_CERT_FILE`
 to a a SSL CA bundle.
 
-A file ca-bundle.crt is supplied inside this gem for this purpose so you can set it to something like: 
+A file ca-bundle.crt is supplied inside this gem for this purpose so you can set it to something like:
 `<RubyHome>/lib/ruby/gems/2.1.0/gems/kitchen-cloudformation-0.0.1/ca-bundle.crt`
 
 
