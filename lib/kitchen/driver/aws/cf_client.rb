@@ -29,10 +29,11 @@ module Kitchen
           region,
           profile_name = nil,
           ssl_cert_file = nil,
-          access_key_id = nil,
-          secret_access_key = nil,
+          aws_key = {},
           session_token = nil
         )
+          access_key_id = aws_key[:access_key_id]
+          secret_access_key = aws_key[:secret_access_key]
           creds = self.class.get_credentials(
             profile_name, access_key_id, secret_access_key, session_token
           )
@@ -47,7 +48,7 @@ module Kitchen
         # Try and get the credentials from an ordered list of locations
         # http://docs.aws.amazon.com/sdkforruby/api/index.html#Configuration
         def self.get_credentials(profile_name, access_key_id, secret_access_key, session_token)
-          shared_creds = ::Aws::SharedCredentials.new(:profile_name => profile_name)
+          shared_creds = ::Aws::SharedCredentials.new(profile_name: profile_name)
           if access_key_id && secret_access_key
             ::Aws::Credentials.new(access_key_id, secret_access_key, session_token)
           # TODO: these are deprecated, remove them in the next major version

@@ -120,8 +120,7 @@ module Kitchen
           config[:region],
           config[:shared_credentials_profile],
           config[:ssl_cert_file],
-          config[:aws_access_key_id],
-          config[:aws_secret_access_key],
+          {:access_key_id: config[:aws_access_key_id],secret_access_key: config[:aws_secret_access_key]},
           config[:aws_session_token]
         )
       end
