@@ -99,7 +99,7 @@ to override default configuration.
 ```yaml
 ---
 driver:
-  name: cloudformation
+  name: CloudFormation
   stack_name: mystack
   template_file: /test/example.template
   parameters:
@@ -110,7 +110,7 @@ provisioner:
 
 platforms:
   - name: centos-6.4
-    driver:  cloud_formation
+    driver:  CloudFormation
 
 suites:
   - name: default
