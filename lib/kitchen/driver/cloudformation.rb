@@ -53,7 +53,7 @@ module Kitchen
       required_config :ssh_key
       required_config :stack_name
 
-      def create(state) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+      def create(state)
         copy_deprecated_configs(state)
         return if state[:stack_name]
 
@@ -134,7 +134,6 @@ module Kitchen
       # state.  This relies on logic in the transport that merges the transport
       # config with the current state object, so its a bad coupling.  But we
       # can get rid of this when we get rid of these deprecated configs!
-      # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       def copy_deprecated_configs(state)
         state[:connection_timeout] = config[:ssh_timeout] if config[:ssh_timeout]
         state[:connection_retries] = config[:ssh_retries] if config[:ssh_retries]
