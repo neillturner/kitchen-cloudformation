@@ -19,7 +19,7 @@ AbcSize:
 MultilineOperationIndentation:
   Enabled: false
 
-Style/SymbolProc
+Style/SymbolProc:
   Enabled: false
 
 Style/Next:
