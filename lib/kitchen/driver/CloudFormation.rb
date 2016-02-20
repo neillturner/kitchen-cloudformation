@@ -31,24 +31,24 @@ module Kitchen
 
       plugin_version Kitchen::Driver::CLOUDFORMATION_VERSION
 
-      default_config :region,             ENV['AWS_REGION'] || 'us-east-1'
+      default_config :region, ENV['AWS_REGION'] || 'us-east-1'
       default_config :shared_credentials_profile, nil
-      default_config :aws_access_key_id,  nil
+      default_config :aws_access_key_id, nil
       default_config :aws_secret_access_key, nil
-      default_config :aws_session_token,  nil
-      default_config :ssl_cert_file,      ENV['SSL_CERT_FILE']
-      default_config :stack_name,         nil
-      default_config :template_file,      nil
-      default_config :capabilities,      nil
-      default_config :parameters,         {}
-      default_config :disable_rollback,   false
+      default_config :aws_session_token, nil
+      default_config :ssl_cert_file, ENV['SSL_CERT_FILE']
+      default_config :stack_name, nil
+      default_config :template_file, nil
+      default_config :capabilities, nil
+      default_config :parameters, {}
+      default_config :disable_rollback, false
       default_config :timeout_in_minutes, 0
-      default_config :parameters,         {}
+      default_config :parameters, {}
 
-      default_config :ssh_key,              nil
-      default_config :username,            'root'
-      default_config :hostname,             nil
-      # default_config :interface,           nil
+      default_config :ssh_key, nil
+      default_config :username, 'root'
+      default_config :hostname, nil
+      # default_config :interface, nil
 
       required_config :ssh_key
       required_config :stack_name
