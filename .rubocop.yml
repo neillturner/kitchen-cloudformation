@@ -19,6 +19,9 @@ AbcSize:
 MultilineOperationIndentation:
   Enabled: false
 
+Style/SymbolProc
+  Enabled: false
+
 Style/Next:
   Enabled: false
 
