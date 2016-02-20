@@ -39,6 +39,7 @@ module Kitchen
       default_config :ssl_cert_file,      ENV['SSL_CERT_FILE']
       default_config :stack_name,         nil
       default_config :template_file,      nil
+      default_config :capabilities,      nil
       default_config :parameters,         {}
       default_config :disable_rollback,   false
       default_config :timeout_in_minutes, 0

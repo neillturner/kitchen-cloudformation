@@ -39,6 +39,7 @@ module Kitchen
           if config[:template_file]
             s[:template_body] = File.open(config[:template_file], 'rb') { |file| file.read }
           end
+	  s[:capabilities] = config[:capabilities] if !config[:capabilities].nil? && (config[:capabilities].is_a? Array)
           s[:timeout_in_minutes] = config[:timeout_in_minutes] if !config[:timeout_in_minutes].nil? && config[:timeout_in_minutes] > 0
           s[:disable_rollback] = config[:disable_rollback]     if !config[:disable_rollback].nil? && config[:disable_rollback] == true || config[:disable_rollback] == false
           s[:parameters] = []
