@@ -37,6 +37,7 @@ template_url||URL of the file containing the Cloudformation template to run
 parameters|{}|Hash of parameters {key: value} to apply to the templates
 disable_rollback|false|If the template gets an error don't rollback changes
 timeout_in_minutes|0|Timeout if the stack is not created in the time
+capabilities||Array of capabilities that must be specified before creating or updating certain stacks
 
 ## Authenticating with AWS
 
