@@ -3,9 +3,9 @@
 [![Gem Version](https://badge.fury.io/rb/kitchen-cloudformation.png)](http://badge.fury.io/rb/kitchen-cloudformation)
 [![Build Status](https://travis-ci.org/neillturner/kitchen-cloudformation.png)](https://travis-ci.org/neillturner/kitchen-cloudformation)
 
-A Test Kitchen Driver for Amazon AWS CloudFormation.
+A Test Kitchen Driver for Amazon AWS Cloudformation.
 
-This driver uses the [aws sdk gem][aws_sdk_gem] to create and delete Amazon AWS CloudFormation stacks to orchestrate your cloud resources for your infrastructure testing, dev or production setup.
+This driver uses the [aws sdk gem][aws_sdk_gem] to create and delete Amazon AWS Cloudformation stacks to orchestrate your cloud resources for your infrastructure testing, dev or production setup.
 
 It works best using AWS VPC where the servers have fixed IP addresses or in AWS Clasic using known Elastic IP Addresses.
 This allow the IP address of each of the servers to be specified as a hostname in the suite definition (see example below).
@@ -32,8 +32,8 @@ aws_secret_access_key|nil|Deprecated see Authenticating with AWS
 aws_session_token|nil|Deprecated see Authenticating with AWS
 ssl_cert_file| ENV["SSL_CERT_FILE"]|SSL Certificate required on Windows platforms
 stack_name ||Name of the Cloud Formation Stack to create
-template_file||File containing the CloudFormation template to run
-template_url||URL of the file containing the CloudFormation template to run
+template_file||File containing the Cloudformation template to run
+template_url||URL of the file containing the Cloudformation template to run
 parameters|{}|Hash of parameters {key: value} to apply to the templates
 disable_rollback|false|If the template gets an error don't rollback changes
 timeout_in_minutes|0|Timeout if the stack is not created in the time
@@ -99,7 +99,7 @@ to override default configuration.
 ```yaml
 ---
 driver:
-  name: CloudFormation
+  name: cloudformation
   stack_name: mystack
   template_file: /test/example.template
   parameters:
@@ -110,7 +110,7 @@ provisioner:
 
 platforms:
   - name: centos-6.4
-    driver:  CloudFormation
+    driver:  Cloudformation
 
 suites:
   - name: default
@@ -143,7 +143,7 @@ Apache 2.0 (see [LICENSE][license])
 
 -implement all the options of cloud formation.
 
--We also need plugins for: 
+-We also need plugins for:
  OpenStack Heat
  Azure Resource Manager
  Google Cloud Deployment Manager

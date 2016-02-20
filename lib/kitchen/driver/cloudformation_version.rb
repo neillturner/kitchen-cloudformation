@@ -15,6 +15,6 @@
 module Kitchen
   module Driver
     # Version string for CloudFormation Test Kitchen driver
-    CLOUDFORMATION_VERSION = '0.0.3'.freeze
+    CLOUDFORMATION_VERSION = '1.0.3'.freeze
   end
 end

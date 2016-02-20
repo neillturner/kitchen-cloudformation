@@ -24,9 +24,9 @@ require_relative 'aws/stack_generator'
 module Kitchen
   module Driver
     #
-    # Amazon CloudFormation driver for Test Kitchen.
+    # Amazon Cloudformation driver for Test Kitchen.
     #
-    class CloudFormation < Kitchen::Driver::Base
+    class Cloudformation < Kitchen::Driver::Base
       kitchen_driver_api_version 2
 
       plugin_version Kitchen::Driver::CLOUDFORMATION_VERSION
