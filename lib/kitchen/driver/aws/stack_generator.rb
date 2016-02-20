@@ -37,7 +37,7 @@ module Kitchen
           s = { stack_name: config[:stack_name] }
           s[:template_url] = config[:template_url] if config[:template_file]
           if config[:template_file]
-            s[:template_body] = File.open(config[:template_file], 'rb')( &:read )
+            s[:template_body] = File.open(config[:template_file], 'rb') { |file| file.read }
           end
           s[:capabilities] = config[:capabilities] if !config[:capabilities].nil? && (config[:capabilities].is_a? Array)
           s[:timeout_in_minutes] = config[:timeout_in_minutes] if !config[:timeout_in_minutes].nil? && config[:timeout_in_minutes] > 0
