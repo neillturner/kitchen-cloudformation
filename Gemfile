@@ -1,5 +1,8 @@
-# encoding: UTF-8
 source 'https://rubygems.org'
 
-gem 'rubocop', '>=0.26.1'
-gem 'rake', '>=10.2.0'
+gemspec
+
+gem 'rake', '~> 10.4.2'
+gem 'rspec', '~> 3.3.0'
+gem 'rubocop', '~> 0.34'
+gem 'simplecov', '~> 0.10'
