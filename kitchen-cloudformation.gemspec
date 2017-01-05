@@ -28,5 +28,3 @@ Gem::Specification.new do |gem|
     gem.add_dependency 'rubocop', '~> 0.41.2'
   end
 end
-
-
