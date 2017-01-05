@@ -1,4 +1,3 @@
-# encoding: UTF-8
 
 require 'rubocop/rake_task'
 

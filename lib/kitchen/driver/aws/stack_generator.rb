@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 #
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,10 +47,10 @@ module Kitchen
           end
           s[:notification_arns] = config[:notification_arns] if !config[:notification_arns].nil? && (config[:notification_arns].is_a? Array) && !config[:notification_arns].empty?
           s[:resource_types] = config[:resource_types] if !config[:resource_types].nil? && (config[:resource_types].is_a? Array) && !config[:resource_types].empty?
-          s[:role_arn] = config[:role_arn] if !config[:role_arn].nil?
-          s[:on_failure] = config[:on_failure] if !config[:on_failure].nil?  # accepts DO_NOTHING, ROLLBACK, DELETE
-          s[:stack_policy_body] = config[:stack_policy_body] if !config[:stack_policy_body].nil?
-          s[:stack_policy_url] = config[:stack_policy_url] if !config[:stack_policy_url].nil?
+          s[:role_arn] = config[:role_arn] unless config[:role_arn].nil?
+          s[:on_failure] = config[:on_failure] unless config[:on_failure].nil? # accepts DO_NOTHING, ROLLBACK, DELETE
+          s[:stack_policy_body] = config[:stack_policy_body] unless config[:stack_policy_body].nil?
+          s[:stack_policy_url] = config[:stack_policy_url] unless config[:stack_policy_url].nil?
           s[:tags] = []
           config[:tags].each do |k, v|
             s[:tags].push(key: k.to_s, value: v.to_s)
