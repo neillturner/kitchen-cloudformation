@@ -51,7 +51,6 @@ module Kitchen
       default_config :stack_policy_url, nil
       default_config :tags, {}
 
-
       required_config :ssh_key
       required_config :stack_name
 
