@@ -20,11 +20,4 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'multi_json'
   gem.add_dependency 'aws-sdk-v1', '~> 1.59.0'
   gem.add_dependency 'aws-sdk', '~> 2'
-  if RUBY_VERSION >= '2.0'
-    gem.add_dependency 'net-ssh', '~> 3'
-  else
-    gem.add_dependency 'json', '~> 1.8'
-    gem.add_dependency 'net-ssh', '~> 2.9'
-    gem.add_dependency 'rubocop', '~> 0.41.2'
-  end
 end
