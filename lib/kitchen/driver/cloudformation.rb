@@ -31,24 +31,27 @@ module Kitchen
 
       plugin_version Kitchen::Driver::CLOUDFORMATION_VERSION
 
-      default_config :region, ENV['AWS_REGION'] || 'us-east-1'
       default_config :shared_credentials_profile, nil
-      default_config :aws_access_key_id, nil
-      default_config :aws_secret_access_key, nil
-      default_config :aws_session_token, nil
       default_config :ssl_cert_file, ENV['SSL_CERT_FILE']
       default_config :stack_name, nil
       default_config :template_file, nil
       default_config :capabilities, nil
       default_config :parameters, {}
-      default_config :disable_rollback, false
+      default_config :disable_rollback, nil
       default_config :timeout_in_minutes, 0
       default_config :parameters, {}
 
       default_config :ssh_key, nil
       default_config :username, 'root'
       default_config :hostname, nil
-      # default_config :interface, nil
+      default_config :notification_arns, []
+      default_config :resource_types, []
+      default_config :role_arn, nil
+      default_config :on_failure, nil # accepts DO_NOTHING, ROLLBACK, DELETE
+      default_config :stack_policy_body, nil
+      default_config :stack_policy_url, nil
+      default_config :tags, {}
+
 
       required_config :ssh_key
       required_config :stack_name
@@ -118,11 +121,11 @@ module Kitchen
 
       def cf
         @cf ||= Aws::CfClient.new(
-          config[:region],
+          '',
           config[:shared_credentials_profile],
           config[:ssl_cert_file],
-          { access_key_id: config[:aws_access_key_id], secret_access_key: config[:aws_secret_access_key] },
-          config[:aws_session_token]
+          { access_key_id: nil, secret_access_key: nil },
+          nil
         )
       end
 

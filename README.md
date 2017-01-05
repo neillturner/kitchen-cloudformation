@@ -8,12 +8,12 @@ A Test Kitchen Driver for Amazon AWS Cloudformation.
 This driver uses the [aws sdk gem][aws_sdk_gem] to create and delete Amazon AWS Cloudformation stacks to orchestrate your cloud resources for your infrastructure testing, dev or production setup.
 
 It works best using AWS VPC where the servers have fixed IP addresses or in AWS Clasic using known Elastic IP Addresses.
-This allow the IP address of each of the servers to be specified as a hostname in the suite definition (see example below).
+This allow the IP address of each of the servers to be specified as a hostname in the converge step.
 
 So you can deploy and test say a Mongodb High Availability cluster by using cloud formation to create the servers
 and then converge each of the servers in the cluster and run tests.
 
-WARNING: This is a pre-release version. I'm sure the code does not handle all error conditions etc.
+This can be used with [kitchen-verifier-awspec](https://github.com/neillturner/kitchen-verifier-awspec) to do verification of AWS infrastructure.
 
 ## Requirements
 
@@ -25,19 +25,24 @@ will need access to an [AWS][aws_site] account.
 
 key | default value | Notes
 ----|---------------|--------
-region|ENV["AWS_REGION"] or "us-east-1"|Aws Region
+capabilities||Array of capabilities that must be specified before creating or updating certain stacks accepts CAPABILITY_IAM, CAPABILITY_NAMED_IAM
+disable_rollback||If the template gets an error don't rollback changes. true/false. default false.
+notification_arns| [] |The Simple Notification Service (SNS) topic ARNs to publish stack related events. Array of Strings.
+on_failure||Determines what action will be taken if stack creation fails. accepts DO_NOTHING, ROLLBACK, DELETE. You can specify either on_failure or disable_rollback, but not both.
+parameters|{}|Hash of parameters {key: value} to apply to the templates
+resource_types| [] |The template resource types that you have permissions to work with. Array of Strings.
+role_arn||The Amazon Resource Name (ARN) of an AWS Identity and Access Management (IAM) role that AWS CloudFormation assumes to create the stack.
 shared_credentials_profile| nil|Specify Credentials Using a Profile Name
-aws_access_key_id|nil|Deprecated see Authenticating with AWS
-aws_secret_access_key|nil|Deprecated see Authenticating with AWS
-aws_session_token|nil|Deprecated see Authenticating with AWS
 ssl_cert_file| ENV["SSL_CERT_FILE"]|SSL Certificate required on Windows platforms
 stack_name ||Name of the Cloud Formation Stack to create
+stack_policy_body||Structure containing the stack policy body.
+stack_policy_url||Location of a file containing the stack policy.
+tags|{}|Hash of tags for stack TagKey: TagValue
 template_file||File containing the Cloudformation template to run
 template_url||URL of the file containing the Cloudformation template to run
-parameters|{}|Hash of parameters {key: value} to apply to the templates
-disable_rollback|false|If the template gets an error don't rollback changes
 timeout_in_minutes|0|Timeout if the stack is not created in the time
-capabilities||Array of capabilities that must be specified before creating or updating certain stacks
+
+See http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_CreateStack.html for parameter details.
 
 ## Authenticating with AWS
 
@@ -62,7 +67,7 @@ This precedence order is taken from http://docs.aws.amazon.com/sdkforruby/api/in
 In summary it searches the following locations for credentials:
 
    ENV['AWS_ACCESS_KEY_ID'] and ENV['AWS_SECRET_ACCESS_KEY']
-   The shared credentials ini file at ~/.aws/credentials (more information)
+   The shared credentials ini file at ~/.aws/credentials
    From an instance profile when running on EC2
 
 and it searches the following locations for a region:
@@ -104,7 +109,7 @@ driver:
   stack_name: mystack
   template_file: /test/example.template
   parameters:
-    - base_package: wget
+    base_package: wget
 
 provisioner:
   name: chef_zero
@@ -120,8 +125,6 @@ suites:
       username: root
       hostname: '10.53.191.70'
 ```
-
-## <a name="license"></a> License
 
 Apache 2.0 (see [LICENSE][license])
 
@@ -144,8 +147,4 @@ Apache 2.0 (see [LICENSE][license])
 
 -implement all the options of cloud formation.
 
--We also need plugins for:
- OpenStack Heat
- Azure Resource Manager
- Google Cloud Deployment Manager
-but i'm not aware of any ruby sdks for these yet.
+
