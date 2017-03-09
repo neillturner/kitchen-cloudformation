@@ -72,7 +72,6 @@ module Kitchen
           return
         end
         state[:stack_name] = stack.stack_name
-        state[:hostname] = config[:hostname]
         info("Stack <#{state[:stack_name]}> requested.")
         # tag_stack(stack)
 
@@ -85,6 +84,10 @@ module Kitchen
         end
         if s.stack_status == 'CREATE_COMPLETE'
           display_stack_events(state[:stack_name])
+          outputs = Hash[*(s.outputs.map { |o|
+            [o[:output_key], o[:output_value]]
+          }.flatten)]
+          state[:hostname] = config[:hostname].gsub(/\${([^}]+)}/) { |s| outputs[$1]||"" } if config[:hostname]
           info("CloudFormation stack <#{state[:stack_name]}> created.")
         else
           display_stack_events(state[:stack_name])
