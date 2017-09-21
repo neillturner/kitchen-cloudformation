@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require "aws-sdk"
-require "aws-sdk-core/credentials"
-require "aws-sdk-core/shared_credentials"
-require "aws-sdk-core/instance_profile_credentials"
+require 'aws-sdk'
+require 'aws-sdk-core/credentials'
+require 'aws-sdk-core/shared_credentials'
+require 'aws-sdk-core/instance_profile_credentials'
 
 module Kitchen
-
   module Driver
-
     class Aws
 
       # A class for creating and managing the EC2 client connection
@@ -42,12 +40,12 @@ module Kitchen
             profile_name, access_key_id, secret_access_key, session_token, region
           )
           ::Aws.config.update(
-            :region => region,
-            :credentials => creds,
-            :http_proxy => http_proxy,
-            :ssl_verify_peer => ssl_verify_peer
+            region: region,
+            credentials: creds,
+            http_proxy: http_proxy,
+            ssl_verify_peer: ssl_verify_peer
           )
-          ::Aws.config.update(:retry_limit => retry_limit) unless retry_limit.nil?
+          ::Aws.config.update(retry_limit: retry_limit) unless retry_limit.nil?
         end
 
         # Try and get the credentials from an ordered list of locations
@@ -59,11 +57,11 @@ module Kitchen
           source_creds =
             if access_key_id && secret_access_key
               ::Aws::Credentials.new(access_key_id, secret_access_key, session_token)
-            elsif ENV["AWS_ACCESS_KEY_ID"] && ENV["AWS_SECRET_ACCESS_KEY"]
+            elsif ENV['AWS_ACCESS_KEY_ID'] && ENV['AWS_SECRET_ACCESS_KEY']
               ::Aws::Credentials.new(
-                ENV["AWS_ACCESS_KEY_ID"],
-                ENV["AWS_SECRET_ACCESS_KEY"],
-                ENV["AWS_SESSION_TOKEN"]
+                ENV['AWS_ACCESS_KEY_ID'],
+                ENV['AWS_SECRET_ACCESS_KEY'],
+                ENV['AWS_SESSION_TOKEN']
               )
             elsif profile_name
               ::Aws::SharedCredentials.new(:profile_name => profile_name)

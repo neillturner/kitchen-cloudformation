@@ -32,7 +32,7 @@ module Kitchen
       default_config :aws_access_key_id,  nil
       default_config :aws_secret_access_key, nil
       default_config :aws_session_token,  nil
-      default_config :http_proxy, ENV["HTTPS_PROXY"] || ENV["HTTP_PROXY"]
+      default_config :http_proxy, ENV['HTTPS_PROXY'] || ENV['HTTP_PROXY']
       default_config :retry_limit, 3
       default_config :ssl_verify_peer, true
       default_config :stack_name, nil
@@ -120,8 +120,6 @@ module Kitchen
           error("CloudFormation stack <#{stack.stack_name}> failed to deleted.")
         end
       end
-
-
 
       def cf
         @cf ||= Aws::CfClient.new(
