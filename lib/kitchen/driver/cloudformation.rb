@@ -69,7 +69,7 @@ module Kitchen
         EOF
         begin
           stack = create_stack
-        rescue StandardError => e
+        rescue StandardError
           error("CloudFormation #{$ERROR_INFO}.") # e.message
           return
         end
@@ -111,7 +111,7 @@ module Kitchen
               sleep(30)
               stack = cf.get_stack(state[:stack_name])
             end
-          rescue StandardError => e
+          rescue StandardError
             info("CloudFormation stack <#{state[:stack_name]}> deleted.")
             state.delete(:stack_name)
             return
