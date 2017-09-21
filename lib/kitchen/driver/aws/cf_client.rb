@@ -20,12 +20,10 @@ require 'aws-sdk-core/instance_profile_credentials'
 module Kitchen
   module Driver
     class Aws
-
       # A class for creating and managing the EC2 client connection
       #
       # @author Tyler Ball <tball@chef.io>
       class CfClient
-
         def initialize( # rubocop:disable Metrics/ParameterLists
           region,
           profile_name = nil,
@@ -50,8 +48,7 @@ module Kitchen
 
         # Try and get the credentials from an ordered list of locations
         # http://docs.aws.amazon.com/sdkforruby/api/index.html#Configuration
-        # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-        # rubocop:disable Metrics/ParameterLists, Metrics/MethodLength
+        # rubocop:disable Metrics/ParameterLists
         def self.get_credentials(profile_name, access_key_id, secret_access_key, session_token,
                                  region, options = {})
           source_creds =
@@ -64,20 +61,20 @@ module Kitchen
                 ENV['AWS_SESSION_TOKEN']
               )
             elsif profile_name
-              ::Aws::SharedCredentials.new(:profile_name => profile_name)
+              ::Aws::SharedCredentials.new(profile_name: profile_name)
             elsif default_shared_credentials?
               ::Aws::SharedCredentials.new
             else
-              ::Aws::InstanceProfileCredentials.new(:retries => 1)
+              ::Aws::InstanceProfileCredentials.new(retries: 1)
             end
 
           if options[:assume_role_arn] && options[:assume_role_session_name]
-            sts = ::Aws::STS::Client.new(:credentials => source_creds, :region => region)
+            sts = ::Aws::STS::Client.new(credentials: source_creds, region: region)
 
             assume_role_options = (options[:assume_role_options] || {}).merge(
-              :client => sts,
-              :role_arn => options[:assume_role_arn],
-              :role_session_name => options[:assume_role_session_name]
+              client: sts,
+              role_arn: options[:assume_role_arn],
+              role_session_name: options[:assume_role_session_name]
             )
 
             ::Aws::AssumeRoleCredentials.new(assume_role_options)

@@ -29,9 +29,9 @@ module Kitchen
       plugin_version Kitchen::Driver::CLOUDFORMATION_VERSION
       default_config :region, ENV['AWS_REGION'] || 'us-east-1'
       default_config :shared_credentials_profile, nil
-      default_config :aws_access_key_id,  nil
+      default_config :aws_access_key_id, nil
       default_config :aws_secret_access_key, nil
-      default_config :aws_session_token,  nil
+      default_config :aws_session_token, nil
       default_config :http_proxy, ENV['HTTPS_PROXY'] || ENV['HTTP_PROXY']
       default_config :retry_limit, 3
       default_config :ssl_verify_peer, true
@@ -69,7 +69,7 @@ module Kitchen
         END
         begin
           stack = create_stack
-        rescue # Exception => e
+        rescue Exception => e
           error("CloudFormation #{$ERROR_INFO}.") # e.message
           return
         end
@@ -111,7 +111,7 @@ module Kitchen
               sleep(30)
               stack = cf.get_stack(state[:stack_name])
             end
-          rescue # Exception => e
+          rescue Exception => e
             info("CloudFormation stack <#{state[:stack_name]}> deleted.")
             state.delete(:stack_name)
             return
