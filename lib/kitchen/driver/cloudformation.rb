@@ -60,16 +60,16 @@ module Kitchen
         copy_deprecated_configs(state)
         return if state[:stack_name]
 
-        info(Kitchen::Util.outdent!(<<-END))
+        info(Kitchen::Util.outdent!(<<-EOF))
           Creating CloudFormation Stack <#{config[:stack_name]}>...
           If you are not using an account that qualifies under the AWS
           free-tier, you may be charged to run these suites. The charge
           should be minimal, but neither Test Kitchen nor its maintainers
           are responsible for your incurred costs.
-        END
+        EOF
         begin
           stack = create_stack
-        rescue Exception => e
+        rescue StandardError => e
           error("CloudFormation #{$ERROR_INFO}.") # e.message
           return
         end
@@ -111,7 +111,7 @@ module Kitchen
               sleep(30)
               stack = cf.get_stack(state[:stack_name])
             end
-          rescue Exception => e
+          rescue StandardError => e
             info("CloudFormation stack <#{state[:stack_name]}> deleted.")
             state.delete(:stack_name)
             return
