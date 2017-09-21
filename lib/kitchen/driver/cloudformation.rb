@@ -56,6 +56,7 @@ module Kitchen
 
       required_config :stack_name
 
+      # ruboop:disable Lint/RescueWithoutErrorClass
       def create(state)
         copy_deprecated_configs(state)
         return if state[:stack_name]
@@ -120,6 +121,7 @@ module Kitchen
           error("CloudFormation stack <#{stack.stack_name}> failed to deleted.")
         end
       end
+      # ruboop:enable Lint/RescueWithoutErrorClass
 
       def cf
         @cf ||= Aws::CfClient.new(
