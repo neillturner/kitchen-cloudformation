@@ -20,8 +20,15 @@ This can be used with [kitchen-verifier-awspec](https://github.com/neillturner/k
 There are **no** external system requirements for this driver. However you
 will need access to an [AWS][aws_site] account.
 
+## AWS Configuration Options
 
-## Configuration Options
+key | default value | Notes
+----|---------------|--------
+region|env_var AWS_REGION|The AWS region to use. defaults to 'us-east-1' if no AWS_REGION env var.
+shared_credentials_profile| nil|Specify Credentials Using a Profile Name
+
+
+## CloudFormation Configuration Options
 
 key | default value | Notes
 ----|---------------|--------
@@ -32,8 +39,6 @@ on_failure||Determines what action will be taken if stack creation fails. accept
 parameters|{}|Hash of parameters {key: value} to apply to the templates
 resource_types| [] |The template resource types that you have permissions to work with. Array of Strings.
 role_arn||The Amazon Resource Name (ARN) of an AWS Identity and Access Management (IAM) role that AWS CloudFormation assumes to create the stack.
-shared_credentials_profile| nil|Specify Credentials Using a Profile Name
-ssl_cert_file| ENV["SSL_CERT_FILE"]|SSL Certificate required on Windows platforms
 stack_name ||Name of the Cloud Formation Stack to create
 stack_policy_body||Structure containing the stack policy body.
 stack_policy_url||Location of a file containing the stack policy.
@@ -44,36 +49,27 @@ timeout_in_minutes|0|Timeout if the stack is not created in the time
 
 See http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_CreateStack.html for parameter details.
 
-## Authenticating with AWS
+### AWS Authentication
 
-There are 3 ways you can authenticate against AWS, and we will try them in the
+In order to connect to AWS, you must specify the AWS access key id and secret key
+for your account. There are 3 ways you do this, and we will try them in the
 following order:
 
 1. You can specify the access key and access secret (and optionally the session
-token) through config.  See the `aws_access_key_id` and `aws_secret_access_key`
-config sections below to see how to specify these in your .kitchen.yml or
-through environment variables.  If you would like to specify your session token
-use the environment variable `AWS_SESSION_TOKEN`.
-1. The shared credentials ini file at `~/.aws/credentials`.  You can specify
-multiple profiles in this file and select one with the `AWS_PROFILE`
-environment variable or the `shared_credentials_profile` driver config.  Read
-[this][credentials_docs] for more information.
-1. From an instance profile when running on EC2.  This accesses the local
-metadata service to discover the local instance's IAM instance profile.
+   token) through config.  The `aws_access_key_id` and `aws_secret_access_key`
+   parameters can be configured in the .kitchen.yml but its recommended to use
+   through environment variables.  If you would like to specify your session token
+   use the environment variable `AWS_SESSION_TOKEN`.
+2. The shared credentials ini file at `~/.aws/credentials`. This is the file
+   populated by `aws configure` command line and used by AWS tools in general, so if
+   you are set up for any other AWS tools, you probably already have this. You can
+   specify multiple profiles in this file and select one with the `AWS_PROFILE`
+   environment variable or the `shared_credentials_profile` driver config.  Read
+   [this][credentials_docs] for more information.
+3. From an instance profile when running on EC2.  This accesses the local
+   metadata service to discover the local instance's IAM instance profile.
 
 This precedence order is taken from http://docs.aws.amazon.com/sdkforruby/api/index.html#Configuration
-
-```
-In summary it searches the following locations for credentials:
-
-   ENV['AWS_ACCESS_KEY_ID'] and ENV['AWS_SECRET_ACCESS_KEY']
-   The shared credentials ini file at ~/.aws/credentials
-   From an instance profile when running on EC2
-
-and it searches the following locations for a region:
-
-   ENV['AWS_REGION']
-```
 
 The first method attempted that works will be used.  IE, if you want to auth
 using the instance profile, you must not set any of the access key configs
@@ -85,13 +81,13 @@ through CI we no longer recommend storing the AWS credentials in the
 `.kitchen.yml` file.  Instead, specify them as environment variables or in the
 `~/.aws/credentials` file.
 
+
 ## SSL Certificate File Issues
 
 On windows you can get errors `SSLv3 read server certificate B: certificate verify failed`
 as per https://github.com/aws/aws-sdk-core-ruby/issues/93 .
 
-To overcome this problem set the parameter `ssl_cert_file` or the environment variable `SSL_CERT_FILE`
-to a a SSL CA bundle.
+To overcome this problem set the environment variable `SSL_CERT_FILE` to a a SSL CA bundle.
 
 A file ca-bundle.crt is supplied inside this gem for this purpose so you can set it to something like:
 `<RubyHome>/lib/ruby/gems/2.1.0/gems/kitchen-cloudformation-0.0.1/ca-bundle.crt`

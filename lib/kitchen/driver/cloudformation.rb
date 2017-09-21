@@ -13,12 +13,10 @@
 
 require 'benchmark'
 require 'json'
-require 'aws'
 require 'kitchen'
 require_relative 'cloudformation_version'
 require_relative 'aws/cf_client'
 require_relative 'aws/stack_generator'
-# require 'aws-sdk-core/waiters/errors'
 
 module Kitchen
   module Driver
@@ -29,9 +27,14 @@ module Kitchen
       kitchen_driver_api_version 2
 
       plugin_version Kitchen::Driver::CLOUDFORMATION_VERSION
-
+      default_config :region, ENV['AWS_REGION'] || 'us-east-1'
       default_config :shared_credentials_profile, nil
-      default_config :ssl_cert_file, ENV['SSL_CERT_FILE']
+      default_config :aws_access_key_id,  nil
+      default_config :aws_secret_access_key, nil
+      default_config :aws_session_token,  nil
+      default_config :http_proxy, ENV["HTTPS_PROXY"] || ENV["HTTP_PROXY"]
+      default_config :retry_limit, 3
+      default_config :ssl_verify_peer, true
       default_config :stack_name, nil
       default_config :template_file, nil
       default_config :capabilities, nil
@@ -51,7 +54,6 @@ module Kitchen
       default_config :stack_policy_url, nil
       default_config :tags, {}
 
-      required_config :ssh_key
       required_config :stack_name
 
       def create(state)
@@ -119,13 +121,18 @@ module Kitchen
         end
       end
 
+
+
       def cf
         @cf ||= Aws::CfClient.new(
-          '',
+          config[:region],
           config[:shared_credentials_profile],
-          config[:ssl_cert_file],
-          { access_key_id: nil, secret_access_key: nil },
-          nil
+          config[:aws_access_key_id],
+          config[:aws_secret_access_key],
+          config[:aws_session_token],
+          config[:http_proxy],
+          config[:retry_limit],
+          config[:ssl_verify_peer]
         )
       end
 
