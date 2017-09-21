@@ -60,13 +60,13 @@ module Kitchen
         copy_deprecated_configs(state)
         return if state[:stack_name]
 
-        info(Kitchen::Util.outdent!(<<-EOT))
+        info(Kitchen::Util.outdent!(<<-TEXT))
           Creating CloudFormation Stack <#{config[:stack_name]}>...
           If you are not using an account that qualifies under the AWS
           free-tier, you may be charged to run these suites. The charge
           should be minimal, but neither Test Kitchen nor its maintainers
           are responsible for your incurred costs.
-        EOT
+        TEXT
         begin
           stack = create_stack
         rescue StandardError
