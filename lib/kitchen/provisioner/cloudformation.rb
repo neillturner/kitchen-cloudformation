@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require "kitchen"
+require 'kitchen'
 # require "kitchen/cloudformation/configurable"
 
 # The design of the provisioner is unconventional compared to other Test Kitchen provisioner plugins. Since Cloudformation

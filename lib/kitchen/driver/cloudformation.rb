@@ -78,7 +78,7 @@ module Kitchen
             error("CloudFormation #{$ERROR_INFO}.") # e.message
             return
           end
-          state[:stack_name] = stack.stack_name if !state[:stack_name]
+          state[:stack_name] = stack.stack_name unless state[:stack_name]
           info("Stack <#{state[:stack_name]}> requested.")
           # tag_stack(stack)
 
@@ -101,14 +101,14 @@ module Kitchen
             destroy(state)
           end
         end
-        if !change_set_exists
+        unless change_set_exists
           begin
-            stack = create_change_set
+            create_change_set
           rescue
             error("CloudFormation #{$ERROR_INFO}.") # e.message
             return
           end
-          state[:stack_name] = config[:stack_name] if !state[:stack_name]
+          state[:stack_name] = config[:stack_name]  unless state[:stack_name]
         end
       end
 
@@ -119,7 +119,7 @@ module Kitchen
           info("CloudFormation stack <#{state[:stack_name]}> doesn't exist.")
           return
         end
-        if !change_set_exists
+        unless change_set_exists
           info("CloudFormation change set <#{config[:change_set_name]}> doesn't exist for stack <#{state[:stack_name]}>.")
           return
         end
@@ -129,7 +129,7 @@ module Kitchen
           error("CloudFormation #{$ERROR_INFO}.") # e.message
           return
         end
-        state[:stack_name] = stack.stack_name if !state[:stack_name]
+        state[:stack_name] = stack.stack_name  unless state[:stack_name]
         info("Stack <#{state[:stack_name]}> requested.")
         # tag_stack(stack)
 
@@ -225,7 +225,7 @@ module Kitchen
 
       def change_set_exists
         s = cf.describe_change_set(config[:stack_name], config[:change_set_name])
-        if s.nil? or s.status == "DELETE_COMPLETE"
+        if s.nil? || s.status == 'DELETE_COMPLETE'
           false
         else
           info("Change Set #{s[:change_set_name]} already exists so not creating")
@@ -244,7 +244,6 @@ module Kitchen
         end
         cf.create_change_set(stack_data)
       end
-
 
       def execute_change_set
         stack_data = {}
