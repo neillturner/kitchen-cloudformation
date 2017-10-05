@@ -28,6 +28,7 @@ require 'kitchen'
 #     name: cloudformation
 #
 # @see ::Kitchen::Driver::Cloudformation
+# rubocop:disable Style/ClassAndModuleChildren
 class ::Kitchen::Provisioner::Cloudformation < ::Kitchen::Provisioner::Base
   kitchen_provisioner_api_version 2
 

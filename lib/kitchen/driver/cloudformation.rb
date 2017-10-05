@@ -62,7 +62,7 @@ module Kitchen
       # rubocop:disable Lint/RescueWithoutErrorClass
       def create(state)
         copy_deprecated_configs(state)
-        #return if state[:stack_name]
+        # return if state[:stack_name]
 
         info(Kitchen::Util.outdent!(<<-TEXT))
           Creating CloudFormation Stack <#{config[:stack_name]}>...
@@ -101,15 +101,14 @@ module Kitchen
             destroy(state)
           end
         end
-        unless change_set_exists
-          begin
-            create_change_set
-          rescue
-            error("CloudFormation #{$ERROR_INFO}.") # e.message
-            return
-          end
-          state[:stack_name] = config[:stack_name] unless state[:stack_name]
+        return if change_set_exists
+        begin
+          create_change_set
+        rescue
+          error("CloudFormation #{$ERROR_INFO}.") # e.message
+          return
         end
+        state[:stack_name] = config[:stack_name] unless state[:stack_name]
       end
 
       def update(state)
