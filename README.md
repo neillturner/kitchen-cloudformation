@@ -32,6 +32,9 @@ shared_credentials_profile| nil|Specify Credentials Using a Profile Name
 key | default value | Notes
 ----|---------------|--------
 capabilities||Array of capabilities that must be specified before creating or updating certain stacks accepts CAPABILITY_IAM, CAPABILITY_NAMED_IAM
+change_set_name ||Name of the Cloud Formation Change Set to create and then execute at converge time
+change_set_template_file||File containing the Cloudformation template to use to create the change set
+change_set_type | UPDATE |Cloud Formation Change Set can be CREATE or UPDATE
 disable_rollback||If the template gets an error don't rollback changes. true/false. default false.
 notification_arns| [] |The Simple Notification Service (SNS) topic ARNs to publish stack related events. Array of Strings.
 on_failure||Determines what action will be taken if stack creation fails. accepts DO_NOTHING, ROLLBACK, DELETE. You can specify either on_failure or disable_rollback, but not both.
@@ -94,6 +97,16 @@ A file ca-bundle.crt is supplied inside this gem for this purpose so you can set
 
 ## Example
 
+See example at https://github.com/neillturner/cloudformation_repo
+
+kitchen create default-test -l debug
+
+Create the stack if it does not exist and creates a change set if one is specified.
+
+kitchen converge default-test -l debug
+
+Executes the change set if one has been created
+
 The following could be used in a `.kitchen.yml` or in a `.kitchen.local.yml`
 to override default configuration.
 
@@ -105,12 +118,14 @@ driver:
   template_file: /test/example.template
   parameters:
     base_package: wget
+  change_set_name: mystack-cs
+  change_set_template_file: TestSecurityGroupCs.template
 
 provisioner:
-  name: chef_zero
+  name: Cloudformation
 
 platforms:
-  - name: centos-6.4
+  - name: test
     driver:  Cloudformation
 
 suites:

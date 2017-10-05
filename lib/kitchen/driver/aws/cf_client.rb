@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'aws-sdk'
+require 'aws-sdk-cloudformation'
 require 'aws-sdk-core/credentials'
 require 'aws-sdk-core/shared_credentials'
 require 'aws-sdk-core/instance_profile_credentials'
@@ -94,8 +94,28 @@ module Kitchen
           resource.create_stack(options)
         end
 
+        def update_stack(options)
+          resource.update_stack(options)
+        end
+
+        def create_change_set(options)
+          client.create_change_set(options)
+        end
+
+        def execute_change_set(options)
+          client.execute_change_set(options)
+        end
+
         def get_stack(stack_name)
           resource.stack(stack_name)
+        end
+
+        def describe_change_set(stack_name,change_set_name)
+          client.describe_change_set({
+            change_set_name: change_set_name,
+            stack_name: stack_name})
+        rescue
+          nil
         end
 
         def get_stack_events(stack_name)

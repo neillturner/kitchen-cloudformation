@@ -37,12 +37,12 @@ module Kitchen
       default_config :ssl_verify_peer, true
       default_config :stack_name, nil
       default_config :template_file, nil
+
       default_config :capabilities, nil
       default_config :parameters, {}
       default_config :disable_rollback, nil
       default_config :timeout_in_minutes, 0
       default_config :parameters, {}
-
       default_config :ssh_key, nil
       default_config :username, 'root'
       default_config :hostname, nil
@@ -53,13 +53,16 @@ module Kitchen
       default_config :stack_policy_body, nil
       default_config :stack_policy_url, nil
       default_config :tags, {}
+      default_config :change_set_name, nil
+      default_config :change_set_type, 'UPDATE'
+      default_config :change_set_template_file, nil
 
       required_config :stack_name
 
       # rubocop:disable Lint/RescueWithoutErrorClass
       def create(state)
         copy_deprecated_configs(state)
-        return if state[:stack_name]
+        #return if state[:stack_name]
 
         info(Kitchen::Util.outdent!(<<-TEXT))
           Creating CloudFormation Stack <#{config[:stack_name]}>...
@@ -68,33 +71,84 @@ module Kitchen
           should be minimal, but neither Test Kitchen nor its maintainers
           are responsible for your incurred costs.
         TEXT
+        if !stack_exists
+          begin
+            stack = create_stack
+          rescue
+            error("CloudFormation #{$ERROR_INFO}.") # e.message
+            return
+          end
+          state[:stack_name] = stack.stack_name if !state[:stack_name]
+          info("Stack <#{state[:stack_name]}> requested.")
+          # tag_stack(stack)
+
+          s = cf.get_stack(state[:stack_name])
+          while s.stack_status == 'CREATE_IN_PROGRESS'
+            debug_stack_events(state[:stack_name])
+            info("CloudFormation waiting for stack <#{state[:stack_name]}> to be created.....")
+            sleep(30)
+            s = cf.get_stack(state[:stack_name])
+          end
+          display_stack_events(state[:stack_name])
+          if s.stack_status == 'CREATE_COMPLETE'
+            outputs = Hash[*s.outputs.map do |o|
+              [o[:output_key], o[:output_value]]
+            end.flatten]
+            state[:hostname] = config[:hostname].gsub(/\${([^}]+)}/) { outputs[Regexp.last_match(1)] || '' } if config[:hostname]
+            info("CloudFormation stack <#{state[:stack_name]}> created.")
+          else
+            error("CloudFormation stack <#{stack.stack_name}> failed to create....attempting to delete")
+            destroy(state)
+          end
+        end
+        if !change_set_exists
+          begin
+            stack = create_change_set
+          rescue
+            error("CloudFormation #{$ERROR_INFO}.") # e.message
+            return
+          end
+          state[:stack_name] = config[:stack_name] if !state[:stack_name]
+        end
+      end
+
+      def update(state)
+        info("Stack <#{state[:stack_name]}> Execute Change Set requested to update stack.")
+        stack = cf.get_stack(state[:stack_name])
+        if stack.nil?
+          info("CloudFormation stack <#{state[:stack_name]}> doesn't exist.")
+          return
+        end
+        if !change_set_exists
+          info("CloudFormation change set <#{config[:change_set_name]}> doesn't exist for stack <#{state[:stack_name]}>.")
+          return
+        end
         begin
-          stack = create_stack
+          stack = execute_change_set
         rescue
           error("CloudFormation #{$ERROR_INFO}.") # e.message
           return
         end
-        state[:stack_name] = stack.stack_name
+        state[:stack_name] = stack.stack_name if !state[:stack_name]
         info("Stack <#{state[:stack_name]}> requested.")
         # tag_stack(stack)
 
         s = cf.get_stack(state[:stack_name])
-        while s.stack_status == 'CREATE_IN_PROGRESS'
+        while s.stack_status == 'UPDATE_IN_PROGRESS'
           debug_stack_events(state[:stack_name])
-          info("CloudFormation waiting for stack <#{state[:stack_name]}> to be created.....")
-          sleep(30)
+          info("CloudFormation waiting for stack <#{state[:stack_name]}> to be updated.....")
+          sleep(20)
           s = cf.get_stack(state[:stack_name])
         end
         display_stack_events(state[:stack_name])
-        if s.stack_status == 'CREATE_COMPLETE'
+        if s.stack_status == 'UPDATE_COMPLETE'
           outputs = Hash[*s.outputs.map do |o|
             [o[:output_key], o[:output_value]]
           end.flatten]
           state[:hostname] = config[:hostname].gsub(/\${([^}]+)}/) { outputs[Regexp.last_match(1)] || '' } if config[:hostname]
-          info("CloudFormation stack <#{state[:stack_name]}> created.")
+          info("CloudFormation stack <#{state[:stack_name]}> updated.")
         else
-          error("CloudFormation stack <#{stack.stack_name}> failed to create....attempting to delete")
-          destroy(state)
+          error("CloudFormation stack <#{stack.stack_name}> failed to update.")
         end
       end
 
@@ -161,6 +215,49 @@ module Kitchen
         stack_data = stack_generator.cf_stack_data
         info("Creating CloudFormation Stack #{stack_data[:stack_name]}")
         cf.create_stack(stack_data)
+      end
+
+      def stack_exists
+        s = cf.get_stack(config[:stack_name])
+        info("Stack #{s.stack_name} already exists so not creating") if s.exists?
+        s.exists?
+      end
+
+      def change_set_exists
+        s = cf.describe_change_set(config[:stack_name], config[:change_set_name])
+        if s.nil? or s.status == "DELETE_COMPLETE"
+          false
+        else
+          info("Change Set #{s[:change_set_name]} already exists so not creating")
+          true
+        end
+      end
+
+      def create_change_set
+        stack_data = stack_generator.cf_stack_data
+        stack_data[:change_set_name] = config[:change_set_name] if config[:change_set_name]
+        stack_data[:change_set_type] = config[:change_set_type] if config[:change_set_type] # accepts CREATE, UPDATE
+        info("Creating Change Set for CloudFormation Stack #{stack_data[:stack_name]}")
+        stack_data[:template_url] = config[:change_set_template_url] if config[:change_set_template_file]
+        if config[:change_set_template_file]
+          stack_data[:template_body] = File.open(config[:change_set_template_file], 'rb') { |file| file.read }
+        end
+        cf.create_change_set(stack_data)
+      end
+
+
+      def execute_change_set
+        stack_data = {}
+        stack_data[:stack_name] = config[:stack_name]
+        stack_data[:change_set_name] = config[:change_set_name]
+        info("Execute Change Set #{stack_data[:change_set_name]} for CloudFormation Stack #{stack_data[:stack_name]}")
+        cf.execute_change_set(stack_data)
+      end
+
+      def update_stack
+        stack_data = stack_generator.cf_stack_data
+        info("Updating CloudFormation Stack #{stack_data[:stack_name]}")
+        cf.update_stack(stack_data)
       end
 
       def debug_stack_events(stack_name)
