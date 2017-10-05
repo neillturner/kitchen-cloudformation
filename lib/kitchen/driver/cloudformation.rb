@@ -71,7 +71,7 @@ module Kitchen
           should be minimal, but neither Test Kitchen nor its maintainers
           are responsible for your incurred costs.
         TEXT
-        if !stack_exists
+        unless stack_exists
           begin
             stack = create_stack
           rescue
@@ -108,7 +108,7 @@ module Kitchen
             error("CloudFormation #{$ERROR_INFO}.") # e.message
             return
           end
-          state[:stack_name] = config[:stack_name]  unless state[:stack_name]
+          state[:stack_name] = config[:stack_name] unless state[:stack_name]
         end
       end
 

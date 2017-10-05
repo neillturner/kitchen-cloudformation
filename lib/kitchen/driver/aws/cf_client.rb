@@ -110,13 +110,14 @@ module Kitchen
           resource.stack(stack_name)
         end
 
-        def describe_change_set(stack_name,change_set_name)
-          client.describe_change_set({
-            change_set_name: change_set_name,
-            stack_name: stack_name})
+        # rubocop:disable Lint/RescueWithoutErrorClass
+        def describe_change_set(stack_name, change_set_name)
+          client.describe_change_set(change_set_name: change_set_name,
+                                     stack_name: stack_name)
         rescue
           nil
         end
+        # rubocop:enable Lint/RescueWithoutErrorClass
 
         def get_stack_events(stack_name)
           client.describe_stack_events(stack_name: stack_name)
