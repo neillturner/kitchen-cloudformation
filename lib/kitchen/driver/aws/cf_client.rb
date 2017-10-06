@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'aws-sdk-cloudformation'
+require 'aws-sdk'
 require 'aws-sdk-core/credentials'
 require 'aws-sdk-core/shared_credentials'
 require 'aws-sdk-core/instance_profile_credentials'
