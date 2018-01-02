@@ -12,7 +12,7 @@ If you wish to use servers specified as a hostname in the converge step then use
 So you can deploy and test say a Mongodb High Availability cluster by using cloud formation to create the servers
 and then converge each of the servers in the cluster and run tests.
 
-This can be used with [kitchen-verifier-awspec](https://github.com/neillturner/kitchen-verifier-awspec) to do verification of AWS infrastructure.
+This can be used with [kitchen-inspec](https://github.com/chef/kitchen-inspec) or [kitchen-verifier-awspec](https://github.com/neillturner/kitchen-verifier-awspec) to do verification of AWS infrastructure.
 
 ## Requirements
 
