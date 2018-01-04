@@ -83,6 +83,22 @@ through CI we no longer recommend storing the AWS credentials in the
 `.kitchen.yml` file.  Instead, specify them as environment variables or in the
 `~/.aws/credentials` file.
 
+## Change Sets
+
+Normally kitchen-cloudformation creates the stack from the template file when the kitchen create command if run. 
+
+If you specify a change_set_name and a change_set_template_file
+
+```yaml
+  template_file: TestSecurityGroup.template
+  change_set_name: mystack-cs
+  change_set_template_file: TestSecurityGroupCs.template
+```
+
+then it will also create the change set from the change_set_template_file.
+
+Then when the kitchen converge is run it will apply the change-set so it can be tested. 
+
 
 ## SSL Certificate File Issues
 
