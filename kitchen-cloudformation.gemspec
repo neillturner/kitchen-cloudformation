@@ -20,5 +20,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'excon'
   gem.add_dependency 'multi_json'
   gem.add_dependency 'retryable', '~> 2.0'
-  gem.add_dependency 'test-kitchen', '~> 1.4', '>= 1.4.1'
+  gem.add_dependency 'test-kitchen', '>= 1.4.1'
 end
