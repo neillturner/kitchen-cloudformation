@@ -34,7 +34,7 @@ module Kitchen
         # can be passed in null, others need to be ommitted if they are null
         def cf_stack_data
           s = { stack_name: config[:stack_name] }
-          s[:template_url] = config[:template_url] if config[:template_file]
+          s[:template_url] = config[:template_url] if config[:template_file].nil?
           if config[:template_file]
             s[:template_body] = File.open(config[:template_file], 'rb') { |file| file.read }
           end
