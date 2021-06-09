@@ -16,7 +16,7 @@ Gem::Specification.new do |gem|
   gem.executables   = []
   gem.require_paths = ['lib']
   gem.required_ruby_version = '>= 2.2.2'
-  gem.add_dependency 'aws-sdk', '~> 2'
+  gem.add_dependency 'aws-sdk', '~> 3'
   gem.add_dependency 'excon'
   gem.add_dependency 'multi_json'
   gem.add_dependency 'retryable', '~> 2.0'
